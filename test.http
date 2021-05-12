@@ -1,0 +1,29 @@
+### Тестирование поиска по имени автора
+GET http://localhost:80/books?author=pelevin
+
+> {%
+client.test("Request executed successfully", function() {
+  client.assert(response.status === 200, "Response status is not 200");
+  client.assert(response.body === 'books', "valid content");
+});
+%}
+
+### Тестирование поиска по имени книги
+GET http://localhost:80/books?title=Бойцовский клуб
+
+> {%
+client.test("Request executed successfully", function() {
+  client.assert(response.status === 200, "Response status is not 200");
+  client.assert(response.body === 'books', "valid content");
+});
+%}
+
+### Тестирование поиска авторов по стране
+GET http://localhost:80/authors?country=ru
+
+> {%
+client.test("Request executed successfully", function() {
+  client.assert(response.status === 200, "Response status is not 200");
+  client.assert(response.body === 'authors', "valid content");
+});
+%}
