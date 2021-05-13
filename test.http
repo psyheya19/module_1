@@ -27,3 +27,13 @@ client.test("Request executed successfully", function() {
   client.assert(response.body === 'authors', "valid content");
 });
 %}
+
+### Тестирование неподдерживаемого приложением url
+GET http://localhost:80/andrey?country=ru
+
+> {%
+client.test("Request executed successfully", function() {
+  client.assert(response.status === 200, "Response status is not 200");
+  client.assert(response.body === 'authors', "valid content");
+});
+%}
