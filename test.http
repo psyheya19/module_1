@@ -1,5 +1,5 @@
 ### Тестирование поиска по имени автора
-GET http://localhost:80/books?author=pelevin
+GET http://localhost:80/books?author=Пелевин
 
 > {%
 client.test("Request executed successfully", function() {
@@ -19,7 +19,7 @@ client.test("Request executed successfully", function() {
 %}
 
 ### Тестирование поиска авторов по стране
-GET http://localhost:80/authors?country=ru
+GET http://localhost:80/authors?country=Россия
 
 > {%
 client.test("Request executed successfully", function() {
@@ -35,5 +35,15 @@ GET http://localhost:80/andrey?country=ru
 client.test("Request executed successfully", function() {
   client.assert(response.status === 200, "Response status is not 200");
   client.assert(response.body === 'authors', "valid content");
+});
+%}
+
+### Тестирование поиска по имени автора и названию книги
+GET http://localhost:80/books?author=Пелевин&title=Чапаев и Пустота
+
+> {%
+client.test("Request executed successfully", function() {
+  client.assert(response.status === 200, "Response status is not 200");
+  client.assert(response.body === 'books', "valid content");
 });
 %}

@@ -7,13 +7,39 @@ $pathToBooks = __DIR__ . '/books.json';
 $booksTxt = file_get_contents($pathToBooks);
 $books = json_decode($booksTxt, true);
 
+$pathToCountries = __DIR__ . '/countries.json';
+$countriesTxt = file_get_contents($pathToCountries);
+$countries = json_decode($countriesTxt, true);
+
+
 if ('/books'===$_SERVER['PATH_INFO']) {
     $result = [];
+    $searchedAuthors = [];
+    $authorIdToAuthor = [];
+    foreach ($authors as $author) {
+        $authorIdToAuthor[$author['id']] = $author;
+        if (array_key_exists('author', $_GET) && $author['surname'] === $_GET['author']) {
+            $searchedAuthors[] = $author;
+        }
+    }
     foreach ($books as $book) {
-        if (array_key_exists('title', $_GET) && is_string($_GET['title']) && $_GET['title'] === $book['title']) {
+        $validBook = !array_key_exists('author', $_GET);
+        foreach ($searchedAuthors as $searchedAuthor){
+            if ($searchedAuthor['id'] === $book['author_id']){
+     //          $result[] = $book;
+                $validBook = true;
+                break;
+            }
+        }
+        if ($validBook === true && array_key_exists('title', $_GET) && is_string($_GET['title']) ) {
+    //        $result[] = $book;
+            $validBook = $_GET['title'] === $book['title'];
+        }
+        if ($validBook === true){
+            $book['author'] = $authorIdToAuthor[$book['author_id']];
+            unset($book['author_id']);
             $result[] = $book;
         }
-
     }
     $httpCode = 200;
 //    $result = [
@@ -32,6 +58,10 @@ if ('/books'===$_SERVER['PATH_INFO']) {
 //    ];
 } elseif ('/authors'===$_SERVER['PATH_INFO']) {
    $result = [];
+//   foreach ($countries as $country) {
+//       if () {
+//       }
+//   }
     foreach ($authors as $author) {
         if (array_key_exists('country', $_GET) && is_string($_GET['country']) && $_GET['country'] === $author['country']) {
             $result[] = $author;
